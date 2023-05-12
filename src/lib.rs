@@ -11,7 +11,7 @@ pub mod gdt;
 pub mod memory;
 pub mod allocator;
 
-use allocator::{Locked};
+use allocator::{Locked, bump::BumpAllocator, linked_list::LinkedListAllocator, fixed_size_block::FixedSizeBlockAllocator};
 
 // use linked_list_allocator::LockedHeap;
 // #[global_allocator]
@@ -19,10 +19,12 @@ use allocator::{Locked};
 // use allocator::{bump::BumpAllocator};
 // #[global_allocator]
 // pub static ALLOCATOR: Locked<BumpAllocator> = Locked::new(BumpAllocator::new());
-use allocator::linked_list::LinkedListAllocator;
 #[global_allocator]
 pub static ALLOCATOR: Locked<LinkedListAllocator> =
     Locked::new(LinkedListAllocator::new());
+// #[global_allocator]
+// static ALLOCATOR: Locked<FixedSizeBlockAllocator> = Locked::new(
+//     FixedSizeBlockAllocator::new());
 
 pub fn init() {
     gdt::init(); // init global descriptor table
