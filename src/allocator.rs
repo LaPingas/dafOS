@@ -34,7 +34,8 @@ impl<A> Locked<A> {
 }
 
 
-pub fn init_heap<T: GlobalAlloc>(
+// pub fn init_heap<T: GlobalAlloc>(
+pub fn init_heap(
     mapper: &mut impl Mapper<Size4KiB>,
     frame_allocator: &mut impl FrameAllocator<Size4KiB>,
     GLOBAL_ALLOCATOR: &crate::Locked<linked_list::LinkedListAllocator>

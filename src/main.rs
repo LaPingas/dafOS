@@ -6,7 +6,9 @@
 #![feature(const_mut_refs)]
 #![test_runner(crate::test_runner)]
 
-use dafOS_mobile::{print, println, allocator, gdt, interrupts, memory, vga_buffer};
+use dafOS_mobile::{print, println, 
+    allocator, gdt, interrupts, memory, vga_buffer, 
+    task::{Task, simple_executor::SimpleExecutor, executor::Executor, keyboard}};
 
 #[cfg(test)]
 fn test_runner(tests: &[&dyn Fn()]) {
@@ -144,6 +146,10 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
         allocator::init_heap(&mut mapper, &mut frame_allocator, &dafOS_mobile::ALLOCATOR)
             .expect("heap initialization failed");
     }
+
+    let mut executor = Executor::new();
+    executor.spawn(Task::new(keyboard::print_keypresses()));
+    executor.run();
 
     let x = Box::new(41);
     println!("heap_value at {:p}: {}", x, x);
