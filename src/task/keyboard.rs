@@ -36,12 +36,12 @@ pub async fn print_keypresses() {
                 match key {
                     DecodedKey::Unicode(character) => {
                         vga_buffer::GLOBAL_COMMAND_BUFFER.push(character);
+                        print!("{}", character);
                         if character == '\n' {
                             // vga_buffer::GLOBAL_COMMAND_BUFFER.print_command();
                             vga_buffer::GLOBAL_COMMAND_BUFFER.execute_command();
                             vga_buffer::GLOBAL_COMMAND_BUFFER.clear_command();
                         }
-                        print!("{}", character)
                     },
                     DecodedKey::RawKey(key) => print!("{:?}", key),
                 }

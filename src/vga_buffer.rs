@@ -43,16 +43,17 @@ impl Command {
 
     pub fn execute_command(&self) {
         use crate::{print, println};
-        println!();
         match (self.command_to_string().as_str())
         {
             "Uriel" => {
-                println!("brrrrrrrrrrrrrrrrrrrrr");
+                print!("brrrrrrrrrrrrrrrrrrrrr");
             },
             &_ => {
-                println!("Command not found")
+                print!("Command not found")
             }
         }
+        println!();
+        print!("> ");
     }
 
     fn command_to_string(&self) -> String {
