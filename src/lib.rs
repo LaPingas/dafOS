@@ -11,6 +11,7 @@ pub mod gdt;
 pub mod memory;
 pub mod allocator;
 pub mod task;
+pub mod terminal;
 
 use allocator::{Locked, bump::BumpAllocator, linked_list::LinkedListAllocator, fixed_size_block::FixedSizeBlockAllocator};
 
@@ -32,6 +33,7 @@ pub fn init() {
     interrupts::init_idt();
     unsafe { interrupts::PICS.lock().initialize() }; // enable programmable interrup controller
     x86_64::instructions::interrupts::enable(); // enable CPU interrups
+    print!("> ");
 }
 
 pub fn hlt_loop() -> ! {

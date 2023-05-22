@@ -52,8 +52,8 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     use dafOS_mobile::memory;
     use x86_64::{structures::paging::{Translate, Page}, VirtAddr};
 
-    print!("Hello again");
-    println!(", some numbers: {} {}", 42, 1.337);
+    // print!("Hello again");
+    // println!(", some numbers: {} {}", 42, 1.337);
 
     dafOS_mobile::init(); // use the init in libs.irs
 
@@ -147,24 +147,26 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
             .expect("heap initialization failed");
     }
 
+    // vga_buffer::GLOBAL_COMMAND_BUFFER.push(8);
+
     let mut executor = Executor::new();
     executor.spawn(Task::new(keyboard::print_keypresses()));
     executor.run();
 
-    let x = Box::new(41);
-    println!("heap_value at {:p}: {}", x, x);
-    let mut vec = Vec::new();
-    for i in 0..500 {
-        vec.push(i);
-    }
-    println!("vec at {:p}", vec.as_slice());
+    // let x = Box::new(41);
+    // println!("heap_value at {:p}: {}", x, x);
+    // let mut vec = Vec::new();
+    // for i in 0..500 {
+    //     vec.push(i);
+    // }
+    // println!("vec at {:p}", vec.as_slice());
     // println!("vec at {:p}: {:?}", vec.as_slice(), vec);
     // create a reference counted vector -> will be freed when count reaches 0
-    let reference_counted = Rc::new(vec![1, 2, 3]);
-    let cloned_reference = reference_counted.clone();
-    println!("current reference count is {}", Rc::strong_count(&cloned_reference));
-    core::mem::drop(reference_counted);
-    println!("reference count is {} now", Rc::strong_count(&cloned_reference));
+    // let reference_counted = Rc::new(vec![1, 2, 3]);
+    // let cloned_reference = reference_counted.clone();
+    // println!("current reference count is {}", Rc::strong_count(&cloned_reference));
+    // core::mem::drop(reference_counted);
+    // println!("reference count is {} now", Rc::strong_count(&cloned_reference));
 
     #[cfg(test)]
     test_main();

@@ -12,63 +12,6 @@ lazy_static! {
         buffer: unsafe { &mut *(VGA_BUFFER_ADDRESS as *mut Buffer) },
     });
 }
-lazy_static! {
-    pub static ref GLOBAL_COMMAND_BUFFER: Command = Command::new(120);
-    // pub static ref GLOBAL_COMMAND_BUFFER: Vec<u8> = Vec::new();
-}
-pub struct Command {
-    command_buffer: Arc<Mutex<Vec<char>>>,
-}
-impl Command {
-    pub fn new(command_limit: u8) -> Command {
-        Command { command_buffer: Arc::new(Mutex::new(Vec::new())) }
-    }
-
-    pub fn push(&self, value: char) {
-        self.command_buffer.lock().push(value);
-    }
-
-    pub fn print_command(&self) {
-        use crate::{print, println};
-        println!("{}", self.command_to_string());
-        // for c in self.command_buffer.lock().iter() {
-        //     print!("{}", c)
-        // }
-        // println!();
-    }
-
-    pub fn clear_command(&self) {
-        self.command_buffer.lock().clear();
-    }
-
-    pub fn execute_command(&self) {
-        use crate::{print, println};
-        match (self.command_to_string().as_str())
-        {
-            "Uriel" => {
-                print!("brrrrrrrrrrrrrrrrrrrrr");
-            },
-            &_ => {
-                print!("Command not found")
-            }
-        }
-        println!();
-        print!("> ");
-    }
-
-    fn command_to_string(&self) -> String {
-        use crate::{print, println};
-        let mut s: String = String::from("");
-        for c in self.command_buffer.lock().iter() {
-            let c_literal = c.clone();
-            if c_literal == '\n' { continue; }
-            s.push(c_literal);
-        }
-        s
-    }
-}
-
-pub mod terminal;
 
 // some macros
 #[macro_export]
@@ -171,9 +114,6 @@ impl Writer {
                 // printable ASCII byte or newline
                 0x20..=0x7e | b'\n' => {
                     self.write_byte(byte);
-                    
-                    // print!("{:?}", GLOBAL_COMMAND_BUFFER.command_buffer);
-                    // GLOBAL_COMMAND_BUFFER.push(byte);
                 },
                 // not part of printable ASCII range
                 _ => self.write_byte(0xfe),
@@ -191,7 +131,6 @@ impl Writer {
         }
         self.clear_row(BUFFER_HEIGHT - 1);
         self.column_position = 0;
-        //println!("{:?}", COMMAND.cmd_buffer.lock());
     }
 
     fn clear_row(&mut self, row: usize) {

@@ -4,7 +4,7 @@ use futures_util::stream::Stream;
 use conquer_once::spin::OnceCell;
 use lazy_static::lazy_static;
 use crossbeam_queue::ArrayQueue;
-use crate::{print, println, vga_buffer};
+use crate::{print, println, vga_buffer, terminal};
 use futures_util::{task::AtomicWaker, stream::StreamExt};
 use pc_keyboard::{layouts, DecodedKey, HandleControl, Keyboard, ScancodeSet1};
 
@@ -35,12 +35,12 @@ pub async fn print_keypresses() {
             if let Some(key) = keyboard.process_keyevent(key_event) {
                 match key {
                     DecodedKey::Unicode(character) => {
-                        vga_buffer::GLOBAL_COMMAND_BUFFER.push(character);
+                        terminal::GLOBAL_COMMAND_BUFFER.push(character);
                         print!("{}", character);
                         if character == '\n' {
                             // vga_buffer::GLOBAL_COMMAND_BUFFER.print_command();
-                            vga_buffer::GLOBAL_COMMAND_BUFFER.execute_command();
-                            vga_buffer::GLOBAL_COMMAND_BUFFER.clear_command();
+                            terminal::GLOBAL_COMMAND_BUFFER.execute_command();
+                            terminal::GLOBAL_COMMAND_BUFFER.clear_command();
                         }
                     },
                     DecodedKey::RawKey(key) => print!("{:?}", key),
