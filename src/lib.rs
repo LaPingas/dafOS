@@ -1,5 +1,5 @@
 #![allow(non_snake_case)]
-#![no_std] // don't link the Rust standard library
+#![cfg_attr(not(test), no_std)] // don't link the Rust standard library
 #![no_main] // disable all Rust-level entry points
 #![feature(abi_x86_interrupt)] // enable the x86 ABI interrupt experimental feature
 #![feature(const_mut_refs)]

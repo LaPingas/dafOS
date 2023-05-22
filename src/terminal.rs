@@ -1,10 +1,14 @@
 use lazy_static::lazy_static;
 use alloc::{vec::Vec, sync::Arc, string::String};
+use hashbrown::HashMap;
 use spin::Mutex;
 use crate::{print, println};
 
 lazy_static! {
     pub static ref GLOBAL_TERMINAL_COMMAND_BUFFER: Command = Command::new();
+}
+lazy_static! {
+    pub static ref ENV_VARS: Arc<Mutex<HashMap<String, String>>> = Arc::new(Mutex::new(HashMap::new()));
 }
 pub struct Command {
     command_buffer: Arc<Mutex<Vec<char>>>,
@@ -27,10 +31,21 @@ impl Command {
     }
 
     pub fn execute_command(&self) {
-        match self.command_to_string().as_str()
+        let mut command_with_args: Vec<String> = self.command_to_string()
+            .split_whitespace()
+            .map(|word| String::from(word))
+            .collect();;
+        match command_with_args[0].as_str()
         {
             "Uriel" => {
                 print!("brrrrrrrrrrrrrrrrrrrrr");
+            },
+            "assign" => {
+                ENV_VARS.lock().insert(command_with_args[1].clone(), command_with_args[2].clone());
+                print!("Assigned {} to {}", command_with_args[1], command_with_args[2]);
+            },
+            "get" => {
+                print!("{}", ENV_VARS.lock()[command_with_args[1].as_str()]);
             },
             &_ => {
                 print!("Command not found")
