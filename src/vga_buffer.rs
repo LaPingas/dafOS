@@ -2,7 +2,6 @@ use core::fmt;
 use volatile::Volatile;
 use lazy_static::lazy_static;
 use spin::Mutex;
-use alloc::{vec, vec::Vec, sync::Arc, string::String};
 
 // a static reference to VGA writer
 lazy_static! {
@@ -87,6 +86,7 @@ pub struct Writer {
     color_code: ColorCode,
     buffer: &'static mut Buffer,
 }
+#[allow(dead_code)]
 impl Writer {
     pub fn write_byte(&mut self, byte: u8) {
         match byte {

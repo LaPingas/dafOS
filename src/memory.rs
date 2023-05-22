@@ -98,13 +98,13 @@ unsafe impl FrameAllocator<Size4KiB> for EmptyFrameAllocator {
     }
 }
 
-
-struct manual_impl { }
-impl manual_impl {
+struct ManualImpl { }
+#[allow(dead_code)]
+impl ManualImpl {
     unsafe fn translate_addr(addr: VirtAddr, physical_memory_offset: VirtAddr)
         -> Option<PhysAddr>
     {
-        manual_impl::translate_addr_inner(addr, physical_memory_offset)
+        ManualImpl::translate_addr_inner(addr, physical_memory_offset)
     }
 
 

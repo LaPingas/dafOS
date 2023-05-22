@@ -1,10 +1,8 @@
-use core::{pin::Pin, task::{Poll, Context}, borrow::BorrowMut};
-use alloc::{string::String};
+use core::{pin::Pin, task::{Poll, Context}};
 use futures_util::stream::Stream;
 use conquer_once::spin::OnceCell;
-use lazy_static::lazy_static;
 use crossbeam_queue::ArrayQueue;
-use crate::{print, println, vga_buffer, terminal};
+use crate::{print, println, terminal::GLOBAL_TERMINAL_COMMAND_BUFFER};
 use futures_util::{task::AtomicWaker, stream::StreamExt};
 use pc_keyboard::{layouts, DecodedKey, HandleControl, Keyboard, ScancodeSet1};
 
@@ -35,12 +33,12 @@ pub async fn print_keypresses() {
             if let Some(key) = keyboard.process_keyevent(key_event) {
                 match key {
                     DecodedKey::Unicode(character) => {
-                        terminal::GLOBAL_COMMAND_BUFFER.push(character);
+                        GLOBAL_TERMINAL_COMMAND_BUFFER.push(character);
                         print!("{}", character);
                         if character == '\n' {
                             // vga_buffer::GLOBAL_COMMAND_BUFFER.print_command();
-                            terminal::GLOBAL_COMMAND_BUFFER.execute_command();
-                            terminal::GLOBAL_COMMAND_BUFFER.clear_command();
+                            GLOBAL_TERMINAL_COMMAND_BUFFER.execute_command();
+                            GLOBAL_TERMINAL_COMMAND_BUFFER.clear_command();
                         }
                     },
                     DecodedKey::RawKey(key) => print!("{:?}", key),

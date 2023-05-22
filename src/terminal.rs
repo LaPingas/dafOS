@@ -1,15 +1,16 @@
 use lazy_static::lazy_static;
-use alloc::{vec, vec::Vec, sync::Arc, string::String};
+use alloc::{vec::Vec, sync::Arc, string::String};
 use spin::Mutex;
+use crate::{print, println};
 
 lazy_static! {
-    pub static ref GLOBAL_COMMAND_BUFFER: Command = Command::new(120);
+    pub static ref GLOBAL_TERMINAL_COMMAND_BUFFER: Command = Command::new();
 }
 pub struct Command {
     command_buffer: Arc<Mutex<Vec<char>>>,
 }
 impl Command {
-    pub fn new(command_limit: u8) -> Command {
+    pub fn new() -> Command {
         Command { command_buffer: Arc::new(Mutex::new(Vec::new())) }
     }
 
@@ -18,7 +19,6 @@ impl Command {
     }
 
     pub fn print_command(&self) {
-        use crate::{print, println};
         println!("{}", self.command_to_string());
     }
 
@@ -27,8 +27,7 @@ impl Command {
     }
 
     pub fn execute_command(&self) {
-        use crate::{print, println};
-        match (self.command_to_string().as_str())
+        match self.command_to_string().as_str()
         {
             "Uriel" => {
                 print!("brrrrrrrrrrrrrrrrrrrrr");
@@ -42,7 +41,6 @@ impl Command {
     }
 
     fn command_to_string(&self) -> String {
-        use crate::{print, println};
         let mut s: String = String::from("");
         for c in self.command_buffer.lock().iter() {
             let c_literal = c.clone();

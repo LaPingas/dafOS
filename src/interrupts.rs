@@ -88,6 +88,7 @@ extern "x86-interrupt" fn keyboard_interrupt_handler(
     }
 }
 
+#[allow(dead_code)]
 extern "x86-interrupt" fn old_keyboard_interrupt_handler(
     _stack_frame: InterruptStackFrame)
 { // you have to query the scancode of pressed key to receive more keyboard int
