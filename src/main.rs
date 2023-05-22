@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 #![no_std] // don't link the Rust standard library
 #![no_main] // disable all Rust-level entry points
 #![feature(abi_x86_interrupt)] // enable the x86 ABI interrupt experimental feature
@@ -5,6 +6,7 @@
 #![feature(custom_test_frameworks)]
 #![feature(const_mut_refs)]
 #![test_runner(crate::test_runner)]
+#![allow(unused_imports, unreachable_code)]
 
 use dafOS_mobile::{print, println, 
     allocator, gdt, interrupts, memory, vga_buffer, 
@@ -49,7 +51,7 @@ entry_point!(kernel_main);
 fn kernel_main(boot_info: &'static BootInfo) -> ! {
     // this function is the entry point, since the linker looks for a function
     // named `_start` by default
-    use dafOS_mobile::memory;
+    
     use x86_64::{structures::paging::{Translate, Page}, VirtAddr};
 
     // print!("Hello again");
@@ -142,10 +144,8 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
 
     // allocator::init_heap(&mut mapper, &mut frame_allocator, &dafOS_mobile::ALLOCATOR)
     //     .expect("heap initialization failed");
-    unsafe {
-        allocator::init_heap(&mut mapper, &mut frame_allocator, &dafOS_mobile::ALLOCATOR)
-            .expect("heap initialization failed");
-    }
+    allocator::init_heap(&mut mapper, &mut frame_allocator, &dafOS_mobile::ALLOCATOR)
+        .expect("heap initialization failed");
 
     // vga_buffer::GLOBAL_COMMAND_BUFFER.push(8);
 
